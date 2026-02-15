@@ -123,7 +123,7 @@ in {
     fzf.enable = true;
     fzf.enableFishIntegration = true;
     lsd.enable = true;
-    lsd.enableAliases = true;
+    lsd.enableBashIntegration = true;
     zoxide.enable = true;
     zoxide.enableFishIntegration = true;
     zoxide.options = ["--cmd cd"];
