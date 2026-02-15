@@ -29,8 +29,9 @@ jobs:
         run: |
           nix_bin=$(which nix)
           sudo $nix_bin run .#nixosConfigurations.nixos.config.system.build.tarballBuilder
-          sudo ./result/bin/nixos-wsl-tarball-builder
           ls -la
+          ls -la result
+          ls -la result/bin
 
       - name: Upload tarball
         uses: actions/upload-artifact@v4
