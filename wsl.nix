@@ -6,16 +6,25 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # FIXME: change to your tz! look it up with "timedatectl list-timezones"
-  time.timeZone = "Europe/Kyiv";
+  time.timeZone = "Europe/Kiev";
 
   networking.hostName = "${hostname}";
 
-  # FIXME: change your shell here if you don't want fish
-  programs.fish.enable = true;
-  environment.pathsToLink = ["/share/fish"];
-  environment.shells = [pkgs.fish];
+  programs = {
+    fish.enable = true;
+    nh = {
+      enable = true;
+      clean.enable = false;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = "/home/easysly/configuration"; # sets NH_OS_FLAKE variable for you
+    };
+  };
+
+  environment.pathsToLink = [ "/share/fish" ];
+  environment.shells = [ pkgs.fish ];
 
   environment.enableAllTerminfo = true;
 
@@ -52,13 +61,12 @@
   wsl = {
     enable = true;
     wslConf.automount.root = "/mnt";
-    wslConf.interop.appendWindowsPath = false;
     wslConf.network.generateHosts = false;
     defaultUser = username;
     startMenuLaunchers = true;
 
     # Enable integration with Docker Desktop (needs to be installed)
-    docker-desktop.enable = true;
+    #docker-desktop.enable = true;
   };
 
   virtualisation.docker = {
@@ -72,9 +80,9 @@
   # more information: https://github.com/nix-community/NixOS-WSL/issues/238 and https://github.com/nix-community/NixOS-WSL/issues/294
   systemd.user = {
     paths.vscode-remote-workaround = {
-      wantedBy = ["default.target"];
+      wantedBy = [ "default.target" ];
       pathConfig.PathChanged = "%h/.vscode-server/bin";
-   };
+    };
     services.vscode-remote-workaround.script = ''
       for i in ~/.vscode-server/bin/*; do
         if [ -e $i/node ]; then
@@ -87,7 +95,7 @@
 
   nix = {
     settings = {
-      trusted-users = [username];
+      trusted-users = [ username ];
       # FIXME: use your access tokens from secrets.json here to be able to clone private repos on GitHub and GitLab
       # access-tokens = [
       #   "github.com=${secrets.github_token}"
